@@ -1,4 +1,4 @@
-.PHONY: help sync install hooks hooks-run test lint lint-fix format format-check audit ci check clean
+.PHONY: help sync install hooks hooks-run test test-unit lint lint-fix format format-check audit ci check clean
 
 help: ## Lists all available Makefile commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
@@ -16,6 +16,9 @@ hooks-run: ## Runs all pre-commit hooks against all files
 
 test: ## Runs the test suite with pytest
 	uv run pytest
+
+test-unit: ## Run unit tests only (no docker required)
+	uv run pytest tests/unit
 
 lint: ## Checks code with ruff
 	uv run ruff check .
