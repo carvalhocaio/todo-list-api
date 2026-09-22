@@ -39,3 +39,17 @@ check: ci ## Alias for ci
 clean: ## Cleans build artifacts and caches
 	rm -rf .ruff_cache .pytest_cache dist build *.egg-info .coverage htmlcov
 	find . -type d -name '__pycache__' -not -path './.venv*' -exec rm -rf {} +
+
+.PHONY: db-up db-down migrate migration
+
+db-up: ## Start local postgres and wait for it to be healthy
+	docker compose up -d --wait db
+
+db-down: ## Stop local postgres
+	docker compose down
+
+migrate: ## Apply migrations up to head
+	uv run alembic upgrade head
+
+migration: ## Autogenerate a migration: make migration MSG="describe change"
+	uv run alembic revision --autogenerate -m "$(MSG)"
