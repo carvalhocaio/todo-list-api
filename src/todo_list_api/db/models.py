@@ -7,6 +7,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from todo_list_api.db.base import Base, CreatedAtMixin, TimestampMixin
 
+__all__ = ["Base", "RefreshToken", "Todo", "User"]
+
 
 class User(TimestampMixin, Base):
     __tablename__ = "users"

@@ -57,4 +57,4 @@ migration: ## Autogenerate a migration: make migration MSG="describe change"
 	uv run alembic revision --autogenerate -m "$(MSG)"
 
 run: ## Start the API with autoreload
-	uv run uvicorn todo_list_api.main:app --reload
+	uv run uvicorn todo_list_api.main:create_app --factory --reload

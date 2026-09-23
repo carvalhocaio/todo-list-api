@@ -27,7 +27,7 @@ async def client(
     settings: Settings, session: AsyncSession
 ) -> AsyncIterator[AsyncClient]:
     app = create_app(settings)
-    app.state.session_factory = lambda: _SharedSession(session)
+    app.state.session_factory = lambda: SharedSession(session)
 
     async with AsyncClient(
         transport=ASGITransport(app=app),
@@ -36,7 +36,7 @@ async def client(
         yield client
 
 
-class _SharedSession:
+class SharedSession:
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 

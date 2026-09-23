@@ -92,4 +92,4 @@ async def test_idle_buckets_are_evicted(
 
     await limiter.acquire("nico")
 
-    assert "clancy" not in limiter._buckets
+    assert "clancy" not in limiter._buckets  # pyright: ignore[reportPrivateUsage]

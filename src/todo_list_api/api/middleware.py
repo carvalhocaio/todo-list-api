@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import Request, Response, status
+from starlette.middleware.base import RequestResponseEndpoint
 
 from todo_list_api.api.errors import message_response
 
@@ -14,7 +15,9 @@ def client_key(request: Request) -> str:
     return request.client.host if request.client else UNKNOWN_CLIENT
 
 
-async def rate_limit_middleware(request: Request, call_next) -> Response:
+async def rate_limit_middleware(
+    request: Request, call_next: RequestResponseEndpoint
+) -> Response:
     if request.url.path in EXEMPT_PATHS:
         return await call_next(request)
 

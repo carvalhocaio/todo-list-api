@@ -5,7 +5,7 @@ from httpx import ASGITransport, AsyncClient
 from pydantic import PostgresDsn, SecretStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from tests.e2e.conftest import BASE_URL, TEST_SECRET, _SharedSession
+from tests.e2e.conftest import BASE_URL, TEST_SECRET, SharedSession
 from todo_list_api.core.settings import Settings
 from todo_list_api.main import create_app
 
@@ -26,7 +26,7 @@ async def throttled_client(
             rate_limit_refill_per_second=0.1,
         )
     )
-    app.state.session_factory = lambda: _SharedSession(session)
+    app.state.session_factory = lambda: SharedSession(session)
 
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url=BASE_URL

@@ -7,14 +7,14 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from todo_list_api.core.settings import get_settings
-from todo_list_api.db import models
+from todo_list_api.db.models import Base
 
 config = context.config
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = models.Base.metadata  # pyright: ignore[reportPrivateImportUsage]
+target_metadata = Base.metadata
 
 
 def database_url() -> str:

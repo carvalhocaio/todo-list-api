@@ -1,4 +1,4 @@
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -20,7 +20,7 @@ DESCRIPTION = "A to-do list API where every task is a strategy call."
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     engine = build_engine(str(app.state.settings.database_url))
     app.state.engine = engine
     app.state.session_factory = build_session_factory(engine)
@@ -63,6 +63,3 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return {"status": "ok"}
 
     return app
-
-
-app = create_app()

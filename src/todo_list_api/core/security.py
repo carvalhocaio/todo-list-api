@@ -56,11 +56,13 @@ class AccessTokenCodec:
             "iat": issued_at,
             "exp": issued_at + self._ttl,
         }
-        return jwt.encode(payload, self._secret_key, algorithm=self._algorithm)
+        return jwt.encode(  # pyright: ignore[reportUnknownMemberType]
+            payload, self._secret_key, algorithm=self._algorithm
+        )
 
     def decode(self, token: str) -> int:
         try:
-            claims = jwt.decode(
+            claims = jwt.decode(  # pyright: ignore[reportUnknownMemberType]
                 token,
                 self._secret_key,
                 algorithms=[self._algorithm],

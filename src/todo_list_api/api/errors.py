@@ -1,5 +1,6 @@
 from collections.abc import Awaitable, Callable
 from http import HTTPStatus
+from typing import cast
 
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
@@ -50,15 +51,16 @@ def resolve_message(error: DomainError, status_code: int) -> str:
     return HTTPStatus(status_code).phrase
 
 
-async def handle_domain_error(request: Request, error: Exception) -> JSONResponse:
+async def handle_domain_error(_request: Request, error: Exception) -> JSONResponse:
     assert isinstance(error, DomainError)  # noqa: S101
     status_code = resolve_status(error)
     return message_response(status_code, resolve_message(error, status_code))
 
 
-async def handle_http_exception(request: Request, error: Exception) -> JSONResponse:
+async def handle_http_exception(_request: Request, error: Exception) -> JSONResponse:
     assert isinstance(error, HTTPException)  # noqa: S101
-    detail = error.detail if isinstance(error.detail, str) else None
+    raw_detail = cast(object, error.detail)  # FastAPI's subclass allows non-str
+    detail = raw_detail if isinstance(raw_detail, str) else None
     response = message_response(
         error.status_code,
         detail or HTTPStatus(error.status_code).phrase,
@@ -67,7 +69,7 @@ async def handle_http_exception(request: Request, error: Exception) -> JSONRespo
     return response
 
 
-async def handle_validation_error(request: Request, error: Exception) -> JSONResponse:
+async def handle_validation_error(_request: Request, error: Exception) -> JSONResponse:
     assert isinstance(error, RequestValidationError)  # noqa: S101
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
