@@ -39,7 +39,7 @@ class RefreshToken(CreatedAtMixin, Base):
         index=True,
     )
     family_id: Mapped[uuid.UUID] = mapped_column(index=True)
-    diges: Mapped[str] = mapped_column(String(64), unique=True)
+    digest: Mapped[str] = mapped_column(String(64), unique=True)
     expires_at: Mapped[datetime]
     used_at: Mapped[datetime | None]
     revoked_at: Mapped[datetime | None]

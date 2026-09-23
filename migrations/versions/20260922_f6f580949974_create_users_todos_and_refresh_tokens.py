@@ -49,7 +49,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.Column("family_id", sa.Uuid(), nullable=False),
-        sa.Column("diges", sa.String(length=64), nullable=False),
+        sa.Column("digest", sa.String(length=64), nullable=False),
         sa.Column("expires_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("used_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("revoked_at", sa.DateTime(timezone=True), nullable=True),
@@ -66,7 +66,7 @@ def upgrade() -> None:
             ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_refresh_tokens")),
-        sa.UniqueConstraint("diges", name=op.f("uq_refresh_tokens_diges")),
+        sa.UniqueConstraint("digest", name=op.f("uq_refresh_tokens_digest")),
     )
     op.create_index(
         op.f("ix_refresh_tokens_family_id"),
