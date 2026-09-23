@@ -1,4 +1,4 @@
-.PHONY: help sync install hooks hooks-run test test-unit lint lint-fix format format-check audit ci check clean
+.PHONY: help sync install hooks hooks-run test test-unit lint lint-fix format format-check audit ci check clean db-up db-down migrate migration run
 
 help: ## Lists all available Makefile commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
@@ -43,7 +43,6 @@ clean: ## Cleans build artifacts and caches
 	rm -rf .ruff_cache .pytest_cache dist build *.egg-info .coverage htmlcov
 	find . -type d -name '__pycache__' -not -path './.venv*' -exec rm -rf {} +
 
-.PHONY: db-up db-down migrate migration
 
 db-up: ## Start local postgres and wait for it to be healthy
 	docker compose up -d --wait db
@@ -56,3 +55,6 @@ migrate: ## Apply migrations up to head
 
 migration: ## Autogenerate a migration: make migration MSG="describe change"
 	uv run alembic revision --autogenerate -m "$(MSG)"
+
+run: ## Start the API with autoreload
+	uv run uvicorn todo_list_api.main:app --reload

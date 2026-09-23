@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     rate_limit_refill_per_second: PositiveFloat = 0.5
 
     @property
-    def acess_token_ttl(self) -> timedelta:
+    def access_token_ttl(self) -> timedelta:
         return timedelta(minutes=self.access_token_ttl_minutes)
 
     @property
