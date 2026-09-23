@@ -64,6 +64,14 @@ async def test_revoking_a_family_leaves_other_families_untouched(
 
     await repository.revoke_family(compromised)
 
-    assert (await repository.get_by_digest("digest-three")).revoked_at is not None
-    assert (await repository.get_by_digest("digest-four")).revoked_at is not None
-    assert (await repository.get_by_digest("digest-five")).revoked_at is None
+    token_three = await repository.get_by_digest("digest-three")
+    assert token_three is not None
+    assert token_three.revoked_at is not None
+
+    token_four = await repository.get_by_digest("digest-four")
+    assert token_four is not None
+    assert token_four.revoked_at is not None
+
+    token_five = await repository.get_by_digest("digest-five")
+    assert token_five is not None
+    assert token_five.revoked_at is None

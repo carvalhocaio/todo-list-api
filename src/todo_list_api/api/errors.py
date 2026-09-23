@@ -33,12 +33,12 @@ DOMAIN_ERROR_MESSAGE: dict[type[DomainError], str] = {
 
 
 def message_response(status_code: int, message: str) -> JSONResponse:
-    return JSONResponse(status_code=status_code, content={"messsage": message})
+    return JSONResponse(status_code=status_code, content={"message": message})
 
 
 def resolve_status(error: DomainError) -> int:
-    for error_tupe, status_code in DOMAIN_ERROR_STATUS.items():
-        if isinstance(error, error_tupe):
+    for error_type, status_code in DOMAIN_ERROR_STATUS.items():
+        if isinstance(error, error_type):
             return status_code
     return status.HTTP_400_BAD_REQUEST
 
@@ -70,7 +70,7 @@ async def handle_http_exception(request: Request, error: Exception) -> JSONRespo
 async def handle_validation_error(request: Request, error: Exception) -> JSONResponse:
     assert isinstance(error, RequestValidationError)  # noqa: S101
     return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
         content={
             "message": "Validation failed",
             "errors": [
