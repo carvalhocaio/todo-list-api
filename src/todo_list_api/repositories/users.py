@@ -1,7 +1,11 @@
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from todo_list_api.db.models import User
+from todo_list_api.domain.errors import EmailAlreadyRegisteredError
+
+UNIQUE_EMAIL_CONSTRAINT = "uq_users_email"
 
 
 class SqlAlchemyUserRepository:
@@ -9,8 +13,13 @@ class SqlAlchemyUserRepository:
         self._session = session
 
     async def add(self, user: User) -> User:
-        self._session.add(user)
-        await self._session.flush()
+        try:
+            async with self._session.begin_nested():
+                self._session.add(user)
+        except IntegrityError as error:
+            if UNIQUE_EMAIL_CONSTRAINT in str(error.orig):
+                raise EmailAlreadyRegisteredError from error
+            raise
         return user
 
     async def get(self, user_id: int) -> User | None:

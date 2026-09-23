@@ -18,3 +18,16 @@ class TodoSort:
 class TodoFilter:
     completed: bool | None = None
     search: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class TodoDraft:
+    title: str
+    description: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class TodoPatch:
+    title: str | None = None
+    description: str | None = None
+    completed: bool | None = None

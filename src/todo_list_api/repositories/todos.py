@@ -1,4 +1,5 @@
 from collections.abc import Sequence
+from dataclasses import dataclass
 
 from sqlalchemy import ColumnElement, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -79,3 +80,16 @@ class SqlAlchemyTodoRepository:
         if sort.descending:
             return (column.desc(), Todo.id.desc())  # pyright: ignore[reportReturnType]
         return (column.asc(), Todo.id.asc())  # pyright: ignore[reportReturnType]
+
+
+@dataclass(frozen=True, slots=True)
+class TodoDraft:
+    title: str
+    description: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class TodoPatch:
+    title: str | None = None
+    description: str | None = None
+    completed: bool | None = None
